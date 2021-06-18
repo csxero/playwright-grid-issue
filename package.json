@@ -1,0 +1,24 @@
+{
+  "name": "playwright-grid",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,ts}\"",
+    "test": "jest --config jest.config.js",
+    "test:grid": "cross-env E2E_EXECUTION_TYPE=grid jest --config jest.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jest": "^26.0.23",
+    "axios": "^0.21.1",
+    "axios-retry": "^3.1.9",
+    "cross-env": "^7.0.3",
+    "jest": "^27.0.4",
+    "jest-playwright-preset": "^1.6.1",
+    "playwright": "1.10.0",
+    "prettier": "^2.3.1",
+    "ts-jest": "27.0.3",    
+    "typescript": "4.3.4"
+  }
+}

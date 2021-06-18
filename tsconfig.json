@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "sourceMap": true,
+    "target": "es6",
+    "lib": [
+      "es6",
+      "DOM"
+    ],
+    "types": [
+      "@types/jest",
+      "jest-playwright-preset"
+    ],
+    "skipLibCheck": true,
+    "downlevelIteration": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

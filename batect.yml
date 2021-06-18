@@ -1,0 +1,60 @@
+---
+containers:
+  automation-setup:
+    # List of playwright tags. They come from the microsoft image registry
+    # https://mcr.microsoft.com/v2/playwright/tags/list
+    image: mcr.microsoft.com/playwright:v1.10.0-bionic
+    volumes:
+      - local: .
+        container: /code
+        options: cached
+      - type: cache
+        name: node_modules
+        container: /code/src/automation/node_modules
+    working_directory: /code/src/automation
+    enable_init_process: true
+  ##
+  ## Grid stuff
+  ##
+  selenium-hub.pickles:
+    image: docker-hub.artifactory.xero-support.com/selenium/hub:4.0.0-beta-3-prerelease-20210402
+    health_check:
+      command: curl -fsS selenium-hub.pickles:4444/status
+      interval: 5s
+      retries: 20
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "7777:4444"
+  chrome_1.pickles:
+    image: docker-hub.artifactory.xero-support.com/selenium/node-chrome:4.0.0-beta-3-prerelease-20210402
+    volumes:
+      - /dev/shm:/dev/shm
+    dependencies:
+      - selenium-hub.pickles
+    environment:
+      SE_EVENT_BUS_HOST: selenium-hub.pickles
+      SE_EVENT_BUS_PUBLISH_PORT: 4442
+      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+    ports:
+      - "6901:5900"
+
+tasks:
+  build-automation:
+    description: Install depdendencies
+    group: Build tasks
+    run:
+      container: automation-setup
+      command: yarn install
+
+  test-grid:
+    description: Run E2E Tests in stage against the grid
+    group: Automation tasks
+    prerequisites:
+      - build-automation
+    dependencies:
+      - selenium-hub.pickles
+      - chrome_1.pickles
+    run:
+      container: automation-setup
+      command: yarn test:grid
